@@ -1,0 +1,8 @@
+name: position-sender
+version: @version@
+description: Manager sending information about players in the scene
+main: org.blip.position.PositionSenderPlugin
+
+commands:
+  dolbyio-register:
+    description: register and get a code

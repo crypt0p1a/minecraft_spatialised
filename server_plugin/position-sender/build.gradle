@@ -1,0 +1,65 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import dev.s7a.gradle.minecraft.server.MinecraftServerConfig
+import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
+
+plugins {
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id 'dev.s7a.gradle.minecraft.server' version '1.2.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'de.undercouch.download'
+
+apply plugin: 'eclipse'
+
+def props = new Properties()
+file("../../server/.env").withInputStream { props.load(it) }
+
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+
+group = "org.blip.position"
+version = project.property("version")
+
+// for server spawn and information related to the artifact
+def artifactName = "${project.name}-$version-all.jar"
+
+configurations {
+    provided
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:${project.spigot_version}+"
+
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation "com.squareup.retrofit2:converter-gson:2.1.0"
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+        "version": project.property("version"),
+        "websocket_server_host": props.getProperty("INTERNAL_WEBSOCKET_HOST"),
+        "websocket_server_port": props.getProperty("INTERNAL_WEBSOCKET_PORT")
+    ]
+}
+
+clean {
+    delete "${buildDir}/"
+}
+
+task buildAndLaunchServer(type: LaunchMinecraftServerTask) {
+    dependsOn("shadowJar")
+    doFirst {
+        copy {
+            from("${buildDir}/libs/$artifactName") // build/libs/example.jar
+            into("build/MinecraftServer/plugins") // build/MinecraftPaperServer/plugins
+        }
+    }
+    
+    jarUrl.set("https://download.getbukkit.org/spigot/spigot-${project.spigot_version}.jar")
+    nogui.set(true)
+    agreeEula.set(true)
+}

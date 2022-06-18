@@ -1,0 +1,29 @@
+task downloadBuildTools() {
+    doLast {
+        def folder = new File(project.buildDir, "build/BuildTools");
+        if (!folder.exists()) folder.mkdirs();
+        def buildTools = new File(folder, "BuildTools.jar");
+
+        if (buildTools.exists()) return;
+
+        def url = "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar";
+        new URL(url).withInputStream{ i -> buildTools.withOutputStream{ it << i }}
+    }
+}
+
+task runBuildTools() {
+    doLast {
+        def folder = new File(project.buildDir, "build/BuildTools");
+        def buildTools = new File(folder, "BuildTools.jar");
+        javaexec { 
+            main = "-jar";
+            args = [
+                buildTools.getAbsolutePath(),
+                "--rev",
+                project.spigot_version,
+                "--skip-compile"
+            ]
+            workingDir = project.buildDir
+        }
+    }
+}

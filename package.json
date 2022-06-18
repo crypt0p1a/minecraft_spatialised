@@ -1,0 +1,17 @@
+{
+   "name": "minecraft",
+   "version": "1.0.0",
+   "workspaces": [
+      "client",
+      "server"
+   ],
+   "scripts": {
+      "configure": "cd server && npm install; cd .. ; cd client && npm install",
+      "build:server": "npm run _build --ws",
+      "build:plugin": "cd server_plugin; ./gradlew :position-sender:jar :position-sender:shadowJar",
+      "start:server": "npm run _start -w server",
+      "start:plugin": "cd server_plugin; ./gradlew :position-sender:buildAndLaunchServer"
+   },
+   "author": "Blipya",
+   "license": "Apache"
+}
