@@ -55,9 +55,6 @@ async function initialize() {
   }
 }
 
-var joined = false;
-
-//TODO manage retry?
 async function openAndJoin(minecraftId: string) {
   try {
     await VoxeetSDK.session.open({ name: minecraftId, externalId: minecraftId});
@@ -71,20 +68,13 @@ async function openAndJoin(minecraftId: string) {
 
     const conference = await VoxeetSDK.conference.create({ alias: conferenceAlias,
       params: {
-        dolbyVoice: true
+        dolbyVoice: true,
       }
     });
 
     await VoxeetSDK.conference.join(conference, { 
       preferRecvMono: false,
       spatialAudio: true});
-    joined = true;
-
-    await VoxeetSDK.conference.create({ alias: conferenceAlias,
-      params: {
-        dolbyVoice: true
-      }
-    });
   } catch(err) {
     console.error(err);
     alert(`error ${err}`);
@@ -100,17 +90,6 @@ io().on("position", (participant, x,y,z, yaw) => {
       return;
     }
 
-    if(!joined) {
-      return;
-    }
-
-    /*const scale = { x: 1, y: 1, z: 1 };
-    const forward = { x: 0, y: -1, z: 0 };
-    const up = { x: 0, y: 0, z: 1 };
-    const right = { x: 1, y: 0, z: 0 };
-
-    VoxeetSDK.conference.setSpatialEnvironment(scale, forward, up, right);
-    */
     const localParticipant = VoxeetSDK.session.participant;
 
     const participants = VoxeetSDK.conference.participants;
