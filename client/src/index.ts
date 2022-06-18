@@ -79,6 +79,12 @@ async function openAndJoin(minecraftId: string) {
       preferRecvMono: false,
       spatialAudio: true});
     joined = true;
+
+    await VoxeetSDK.conference.create({ alias: conferenceAlias,
+      params: {
+        dolbyVoice: true
+      }
+    });
   } catch(err) {
     console.error(err);
     alert(`error ${err}`);
