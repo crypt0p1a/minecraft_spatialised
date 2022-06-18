@@ -52,13 +52,11 @@ public class ApiFetchThread {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Location eye = player.getEyeLocation();
-                log("???" + eye.getBlockX() + " " + eye.getBlockZ() + " " + eye.getX() + " " + eye.getZ());
                 positions.put(player.getUniqueId().toString(), new Position(player.getEyeLocation()));
             }
 
             String message = gson.toJson(new PositionUpdate(positions));
             if (null != webSocket) webSocket.post(message);
-            log("running for " + message);
             if (next == null) return;
             scheduler.runTaskLater(plugin, next, MILLISECOND_500);
         };
@@ -66,7 +64,7 @@ public class ApiFetchThread {
 
     private void onMessageReceived(String message) {
         RequestUUID object = gson.fromJson(message, RequestUUID.class);
-        logger.log(Level.INFO, "message received for type " + object);
+        log("message received for type " + object);
         String uuid = getUUID.get(object.code);
         if (null != uuid) {
             SendUUID sendUUID = new SendUUID(object.id, uuid);
