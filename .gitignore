@@ -5,3 +5,4 @@ public/bundle.js
 public/index.html
 
 .DS_Store
+.gradle/
