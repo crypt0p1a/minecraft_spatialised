@@ -11,6 +11,7 @@ function namedItem(select: HTMLSelectElement, device: MediaDeviceInfo) {
   while(index < select.options.length) {
     const item = select.options.item(index);
     if (!!item && item.value === device.deviceId) return item;
+    index++;
   }
   return null;
 }
