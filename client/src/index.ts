@@ -108,7 +108,7 @@ io().on("position", (participant, x,y,z, yaw) => {
       return;
     }
 
-    yaw = (-yaw + 180.0) % 360.0;
+    //yaw = (-yaw + 180.0) % 360.0;
     //set the position infos
     if(participant === localParticipant.info?.externalId) {
       VoxeetSDK.conference.setSpatialDirection(localParticipant, {
