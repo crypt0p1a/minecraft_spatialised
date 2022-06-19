@@ -3,7 +3,87 @@ import * as _ from 'lodash';
 import io from "socket.io-client";
 import calls from './calls';
 
+var inputDevices = document.createElement("select");
+var outputDevices = document.createElement("select");
+
+function namedItem(select: HTMLSelectElement, device: MediaDeviceInfo) {
+  var index = 0;
+  while(index < select.options.length) {
+    const item = select.options.item(index);
+    if (!!item && item.value === device.deviceId) return item;
+  }
+  return null;
+}
+
+function updateInput(type: "input"|"output", input: HTMLSelectElement, devices?: MediaDeviceInfo[]) {
+  if (!devices) return;
+
+  devices.forEach(device => {
+    //namedItem wasn't working with value(?) so using old way
+    const found = namedItem(input, device);
+    if (!!found) return;
+
+    const option = document.createElement("option");
+    option.value = device.deviceId;
+    option.text = `${device.label} (${type})`;
+    input.options.add(option);
+  });
+
+  var index = 0;
+  const options = input.options;
+  while(index < options.length) {
+    if (!!devices.find(d => d.deviceId === options.item(index)?.id)) {
+      index ++;
+    } else {
+      input.options.remove(index);
+    }
+  }
+
+  if (options.length != devices.length) {
+    //alert("error in the device update, the input values will differ ");
+  }
+}
+
+function selectDevice(select: HTMLSelectElement, setter: (id: string) => Promise<string>) {
+  return async () => {
+    var value: string|null|undefined;
+    try {
+      const selectedValue = select.selectedOptions.item(0);
+      value = selectedValue?.value;
+      console.log("update device ", value);
+      if (!value) {
+        alert(`cancelled, id is invalid = ${value}`);
+        return;
+      }
+
+      await VoxeetSDK.mediaDevice.selectAudioOutput(value);
+    } catch(err) {
+      alert(`Error while updating device (id=${value}) : ${err}`)
+    }
+  }
+}
+
+async function updateDevices() {
+  const [inputs, outputs] = await Promise.all([
+    VoxeetSDK.mediaDevice.enumerateAudioInputDevices(),
+    VoxeetSDK.mediaDevice.enumerateAudioOutputDevices()
+  ]);
+  console.log(inputs);
+  console.log(outputs);
+
+  updateInput("input", inputDevices, inputs);
+  updateInput("output", outputDevices, outputs);
+
+  inputDevices.onchange = selectDevice(inputDevices,
+    id => VoxeetSDK.mediaDevice.selectAudioInput(id));
+
+  outputDevices.onchange = selectDevice(outputDevices,
+    id => VoxeetSDK.mediaDevice.selectAudioOutput(id));
+}
+
 function component() {
+  updateDevices();
+  console.log("loading default");
   const minecraftId = localStorage.getItem("minecraftId") || "";
 
   const element = document.createElement('div');
@@ -18,6 +98,7 @@ function component() {
   button.setAttribute("value", "click to connect after issuing /dolbyio-register in minecraft");
   button.onclick = async () => {
     try {
+      await updateDevices();
       await initialize();
       //@ts-ignore
       var code: string = document.getElementById("minecraftId").value || "";
@@ -27,13 +108,17 @@ function component() {
       if (!uuid) throw "invalid uuid obtained, is the code valid ?";
       localStorage.setItem("minecraftId", code);
       await openAndJoin(uuid);
+
+      await updateDevices();
     } catch(err) {
       console.error(err);
       alert(`An error occured ${err}`);
     }
   }
 
-  element.append(name, button);
+  element.append(name, button, inputDevices, outputDevices);
+
+  updateDevices();
 
   return element;
 }
