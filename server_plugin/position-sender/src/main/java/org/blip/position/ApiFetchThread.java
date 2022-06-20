@@ -23,23 +23,26 @@ public class ApiFetchThread {
     private final static int MILLISECOND_500 = 10;
     private WebSocket webSocket;
     private final Gson gson;
-    private BukkitScheduler scheduler;
+    private final BukkitScheduler scheduler;
     private Runnable next;
 
     private Runnable runner;
-    private Logger logger;
+    private final Logger logger;
 
-    private GetUUID getUUID;
+    private final GetUUID getUUID;
+    private final GetScale getScale;
 
     public ApiFetchThread(
             String url,
             PositionSenderPlugin plugin,
             Logger logger,
-            GetUUID getUUID) throws URISyntaxException {
+            GetUUID getUUID,
+            GetScale getScale) throws URISyntaxException {
         this.scheduler = Bukkit.getScheduler();
         this.logger = logger;
         this.webSocket = new WebSocket(url, logger, this::onMessageReceived);
         this.getUUID = getUUID;
+        this.getScale = getScale;
 
         gson = new GsonBuilder().create();
 
@@ -51,8 +54,10 @@ public class ApiFetchThread {
             HashMap<String, Position> positions = new HashMap<>();
 
             for (Player player : Bukkit.getOnlinePlayers()) {
+                String uuid = player.getUniqueId().toString();
                 Location eye = player.getEyeLocation();
-                positions.put(player.getUniqueId().toString(), new Position(player.getEyeLocation()));
+                float scale = getScale.get(uuid);
+                positions.put(uuid, new Position(eye, scale));
             }
 
             String message = gson.toJson(new PositionUpdate(positions));
@@ -90,5 +95,9 @@ public class ApiFetchThread {
 
     public interface GetUUID {
         String get(String code);
+    }
+
+    public interface GetScale {
+        float get(String uuid);
     }
 }

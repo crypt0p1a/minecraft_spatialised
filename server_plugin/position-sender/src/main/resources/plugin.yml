@@ -6,3 +6,5 @@ main: org.blip.position.PositionSenderPlugin
 commands:
   dolbyio-register:
     description: register and get a code
+  dolbyio-configure:
+    description: configure the environment

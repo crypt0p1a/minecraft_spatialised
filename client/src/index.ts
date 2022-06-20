@@ -169,7 +169,7 @@ async function openAndJoin(minecraftId: string) {
 
 document.body.appendChild(component());
 
-io().on("position", (participant, x,y,z, yaw) => {
+io().on("position", (participant, x, y, z, yaw, pitch, scale) => {
   try {
     if (!VoxeetSDK.conference.current) {
       console.log("not in a conference...");
@@ -200,6 +200,11 @@ io().on("position", (participant, x,y,z, yaw) => {
       VoxeetSDK.conference.setSpatialDirection(localParticipant, {
         x: 0, y: yaw, z:0
       });
+      const forwardVec = { x : 0, y: 0, z: 1};
+      const upVec = { x : 0, y: 1, z: 0};
+      const rightVec = { x : 1, y: 0, z: 0};
+      const scaleVec = { x : scale, y: scale, z: scale};
+      VoxeetSDK.conference.setSpatialEnvironment(scaleVec, forwardVec, upVec, rightVec);
     }
 
     VoxeetSDK.conference.setSpatialPosition(inConf, {x,y,z});

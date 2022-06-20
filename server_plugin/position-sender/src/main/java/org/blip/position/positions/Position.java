@@ -8,16 +8,18 @@ public class Position {
     double z;
     float yaw;
     float pitch;
+    float scale;
 
-    public Position(double x, double y, double z, float yaw, float pitch) {
+    public Position(double x, double y, double z, float yaw, float pitch, float scale) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.yaw = yaw;
         this.pitch = pitch;
+        this.scale = scale;
     }
 
-    public Position(Location loc) {
-        this(loc.getX(), loc.getY(), loc.getY(), loc.getYaw(), loc.getPitch());
+    public Position(Location loc, float scale) {
+        this(loc.getX(), loc.getY(), loc.getY(), loc.getYaw(), loc.getPitch(), scale);
     }
 }

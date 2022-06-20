@@ -1,15 +1,14 @@
-package org.blip.position;
+package org.blip.position.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class DolbyioRegisterCommand implements CommandExecutor {
+public class DolbyioRegisterCommand extends RegisterableCommandExecutor {
 
     private Random random = new Random();
 
@@ -29,17 +28,12 @@ public class DolbyioRegisterCommand implements CommandExecutor {
     private GetCode getCode;
 
     public DolbyioRegisterCommand(OnCode onCode, GetCode getCode) {
+        super("dolbyio-register");
         this.onCode = onCode;
         this.getCode = getCode;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "You must be a player in order to execute this command.");
-            return true;
-        }
-
+    protected final boolean onCommandExecute(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
         String uuid = player.getUniqueId().toString();
 
@@ -55,6 +49,11 @@ public class DolbyioRegisterCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabCompleteExecute(CommandSender sender, Command command, String label, String[] args) {
+        return null;
     }
 
     public interface OnCode {
