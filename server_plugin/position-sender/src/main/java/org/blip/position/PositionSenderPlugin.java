@@ -108,11 +108,9 @@ public class PositionSenderPlugin extends JavaPlugin {
 
     private float getScale(String uuid) {
         if (null == uuid) return 1;
-        Float scale = 1.f;
-        if(scales.contains(uuid)) scale = scales.get(uuid);
+        Float scale = scales.get(uuid);
 
-        if(null != scale) return scale;
-        return scale;
+        return null != scale ? scale : 1;
     }
 
     private String getUUID(String code) {
