@@ -5,7 +5,7 @@ import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id 'dev.s7a.gradle.minecraft.server' version '1.2.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.0'
 }
 
 apply plugin: 'java'
@@ -80,12 +80,4 @@ task buildAndLaunchServer(type: LaunchMinecraftServerTask) {
     jarUrl.set("https://download.getbukkit.org/spigot/spigot-${project.spigot_version}.jar")
     nogui.set(true)
     agreeEula.set(true)
-}
-
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "16"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "16"
 }
