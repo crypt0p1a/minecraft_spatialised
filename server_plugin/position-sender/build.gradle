@@ -81,3 +81,11 @@ task buildAndLaunchServer(type: LaunchMinecraftServerTask) {
     nogui.set(true)
     agreeEula.set(true)
 }
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "16"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "16"
+}
