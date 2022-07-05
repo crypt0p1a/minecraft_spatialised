@@ -28,7 +28,7 @@ public class SpreadGatherer {
 
         while (toScan.size() > 0) {
             Block block = toScan.remove(0); // remove and get
-            if (null == block || distance(block, first) >= 3) continue;
+            if (null == block || distance(block, first) >= 25) continue;
 
             scanned.add(block);
 
