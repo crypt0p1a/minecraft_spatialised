@@ -5,6 +5,7 @@ import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id 'dev.s7a.gradle.minecraft.server' version '1.2.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.21-2'
 }
 
 apply plugin: 'java'
@@ -44,10 +45,13 @@ def urlFile = { url, name ->
     files(file.absolutePath)
 }
 
+def ktormVersion = '3.2.0'
+
 dependencies {
     compileOnly "org.spigotmc:spigot-api:${project.spigot_version}-R0.1-SNAPSHOT"
 
-    implementation files("libs/SqliteORM.jar")
+    implementation "org.ktorm:ktorm-core:${ktormVersion}"
+    implementation "org.ktorm:ktorm-support-sqlite:${ktormVersion}"
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     implementation "com.squareup.retrofit2:converter-gson:2.1.0"
 }

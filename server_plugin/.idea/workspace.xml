@@ -82,6 +82,7 @@
       <list>
         <option value="Interface" />
         <option value="Class" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -104,6 +105,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.blip.position.room" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="org.blip.position.commands" />
       <recent name="org.blip.position" />

@@ -29,7 +29,11 @@ public class Room {
         origin = new Coordinate(x, y, z);
     }
 
-    public String id() {
+    public String getWorld() {
+        return world;
+    }
+
+    public String getId() {
         return id;
     }
 

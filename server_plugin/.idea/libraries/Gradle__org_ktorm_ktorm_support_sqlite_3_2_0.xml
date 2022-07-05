@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.ktorm:ktorm-support-sqlite:3.2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ktorm/ktorm-support-sqlite/3.2.0/e40b96d46885be18b084a7cee90c84d1c4972d8a/ktorm-support-sqlite-3.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ktorm/ktorm-support-sqlite/3.2.0/e19df4862029f5a69ce047dbefee88acc5dd75c1/ktorm-support-sqlite-3.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
