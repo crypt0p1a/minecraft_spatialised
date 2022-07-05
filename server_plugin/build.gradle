@@ -11,9 +11,7 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
-        maven {
-            url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
-        }
+        mavenLocal()
         maven {
             url "https://oss.sonatype.org/content/groups/public"
         }

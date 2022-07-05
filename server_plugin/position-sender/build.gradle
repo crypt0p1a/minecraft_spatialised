@@ -31,8 +31,21 @@ configurations {
     provided
 }
 
+def urlFile = { url, name ->
+    File file = new File("$buildDir/download/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
 dependencies {
-    compileOnly "org.spigotmc:spigot-api:${project.spigot_version}+"
+    compileOnly "org.spigotmc:spigot-api:${project.spigot_version}-R0.1-SNAPSHOT"
 
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     implementation "com.squareup.retrofit2:converter-gson:2.1.0"

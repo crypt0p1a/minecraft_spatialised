@@ -6,7 +6,7 @@
       "server"
    ],
    "scripts": {
-      "configure": "cd server && npm install; cd .. ; cd client && npm install",
+      "configure": "cd server && npm install; cd .. ; cd client && npm install ; cd .. ; cd server_plugin ; ./gradlew downloadBuildTools runBuildTools",
       "build:server": "npm run _build --ws",
       "build:plugin": "cd server_plugin; ./gradlew :position-sender:jar :position-sender:shadowJar",
       "start:server": "npm run _start -w server",
