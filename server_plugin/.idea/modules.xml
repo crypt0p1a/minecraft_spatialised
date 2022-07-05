@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server_plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/server_plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/position-sender/server_plugin.position-sender.iml" filepath="$PROJECT_DIR$/.idea/modules/position-sender/server_plugin.position-sender.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/position-sender/server_plugin.position-sender.main.iml" filepath="$PROJECT_DIR$/.idea/modules/position-sender/server_plugin.position-sender.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/position-sender/server_plugin.position-sender.test.iml" filepath="$PROJECT_DIR$/.idea/modules/position-sender/server_plugin.position-sender.test.iml" />
     </modules>
   </component>
 </project>
