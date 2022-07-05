@@ -8,3 +8,5 @@ commands:
     description: register and get a code
   dolbyio-configure:
     description: configure the environment
+  dolbyio-room:
+    description: create and update rooms

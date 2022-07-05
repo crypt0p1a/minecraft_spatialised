@@ -8,13 +8,17 @@ import org.blip.position.positions.PositionUpdate;
 import org.blip.position.positions.RequestUUID;
 import org.blip.position.positions.SendUUID;
 import org.blip.position.positions.WebSocket;
+import org.blip.position.room.Room;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +41,8 @@ public class ApiFetchThread {
             PositionSenderPlugin plugin,
             Logger logger,
             GetUUID getUUID,
-            GetScale getScale) throws URISyntaxException {
+            GetScale getScale,
+            GetRooms getRooms) throws URISyntaxException {
         this.scheduler = Bukkit.getScheduler();
         this.logger = logger;
         this.webSocket = new WebSocket(url, logger, this::onMessageReceived);
@@ -53,11 +58,18 @@ public class ApiFetchThread {
         runner = () -> {
             HashMap<String, Position> positions = new HashMap<>();
 
+            ConcurrentLinkedQueue<Room> rooms = getRooms.get();
+
             for (Player player : Bukkit.getOnlinePlayers()) {
                 String uuid = player.getUniqueId().toString();
                 Location eye = player.getEyeLocation();
                 float scale = getScale.get(uuid);
-                positions.put(uuid, new Position(eye, scale));
+                List<String> inRooms = new ArrayList<>();
+                System.out.println("sending y " + eye.getX() + "/" + eye.getY() + "/" + eye.getZ());
+                for (Room room : rooms) {
+                    if (room.isInRoom(player)) inRooms.add(room.id());
+                }
+                positions.put(uuid, new Position(eye, scale, inRooms));
             }
 
             String message = gson.toJson(new PositionUpdate(positions));
@@ -99,5 +111,9 @@ public class ApiFetchThread {
 
     public interface GetScale {
         float get(String uuid);
+    }
+
+    public interface GetRooms {
+        ConcurrentLinkedQueue<Room> get();
     }
 }

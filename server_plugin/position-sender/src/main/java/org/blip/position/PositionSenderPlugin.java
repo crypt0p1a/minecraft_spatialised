@@ -3,7 +3,9 @@ package org.blip.position;
 
 import org.blip.position.commands.DolbyioConfigureCommand;
 import org.blip.position.commands.DolbyioRegisterCommand;
+import org.blip.position.commands.DolbyioRoomCommand;
 import org.blip.position.commands.RegisterableCommandExecutor;
+import org.blip.position.room.Room;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,11 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class PositionSenderPlugin extends JavaPlugin {
 
     private ConcurrentHashMap<String, Float> scales = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, String> codes = new ConcurrentHashMap<>();
+    private ConcurrentLinkedQueue<Room> rooms = new ConcurrentLinkedQueue<>();
 
     private static PositionSenderPlugin plugin;
 
@@ -46,15 +50,13 @@ public class PositionSenderPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        plugin.
-
-                getLogger().info("dolbyio onEnable");
+        plugin.getLogger().info("dolbyio onEnable");
 
         try {
             String url = loadURLWebSocket();
             getLogger().info("url: " + url);
 
-            thread = new ApiFetchThread(url, this, getLogger(), this::getUUID, this::getScale);
+            thread = new ApiFetchThread(url, this, getLogger(), this::getUUID, this::getScale, this::getRooms);
             thread.start();
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
@@ -67,6 +69,8 @@ public class PositionSenderPlugin extends JavaPlugin {
         commands.add(new DolbyioConfigureCommand(
                 scales::put
         ));
+
+        commands.add(new DolbyioRoomCommand(this::onRoom));
 
         for (RegisterableCommandExecutor executor : commands) {
             executor.registerInto(this);
@@ -91,7 +95,7 @@ public class PositionSenderPlugin extends JavaPlugin {
 
         for (RegisterableCommandExecutor executor : commands) {
             List<String> onTabComplete = executor.onTabComplete(sender, command, alias, args);
-            if(null != onTabComplete) return onTabComplete;
+            if (null != onTabComplete) return onTabComplete;
         }
 
         return null;
@@ -123,6 +127,14 @@ public class PositionSenderPlugin extends JavaPlugin {
             throwable.printStackTrace();
         }
         return null;
+    }
+
+    private ConcurrentLinkedQueue<Room> getRooms() {
+        return rooms;
+    }
+
+    private void onRoom(Room room) {
+        rooms.add(room);
     }
 
 }

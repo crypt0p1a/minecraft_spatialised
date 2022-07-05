@@ -3,6 +3,12 @@ import * as _ from 'lodash';
 import io from "socket.io-client";
 import calls from './calls';
 
+interface ParticipantRooms {
+  [participant: string]: string[]
+}
+
+const participantRooms: ParticipantRooms = {};
+
 var inputDevices = document.createElement("select");
 var outputDevices = document.createElement("select");
 
@@ -169,12 +175,19 @@ async function openAndJoin(minecraftId: string) {
 
 document.body.appendChild(component());
 
-io().on("position", (participant, x, y, z, yaw, pitch, scale) => {
+io().on("position", (participant, x, y, z, yaw, pitch, scale, rooms) => {
   try {
     if (!VoxeetSDK.conference.current) {
       console.log("not in a conference...");
       return;
     }
+
+    //TODO for participant updates specifically when it's about the local participant,
+    // in the future it'd be interesting to have a dedicated method which will update the whole scene 
+    // for instance when the local participant leaves a room, it needs to update every participant's positions
+
+    //update the rooms for the given participant
+    participantRooms[participant] = rooms || [];
 
     const localParticipant = VoxeetSDK.session.participant;
 
@@ -207,7 +220,24 @@ io().on("position", (participant, x, y, z, yaw, pitch, scale) => {
       VoxeetSDK.conference.setSpatialEnvironment(scaleVec, forwardVec, upVec, rightVec);
     }
 
-    VoxeetSDK.conference.setSpatialPosition(inConf, {x,y,z});
+    // now a specific method so that we check the impact of the rooms vs the world
+    if(participant !== localParticipant.info?.externalId) {
+      const localRooms = participantRooms[localParticipant.info?.externalId] || [];
+      const remoteRooms = participantRooms[localParticipant.info?.externalId] || [];
+
+      const intersectRooms = localRooms?.filter(room => remoteRooms.includes(room));
+      if (intersectRooms.length > 0 || (localRooms.length == 0 && remoteRooms.length == 0)) {
+        console.log("people are in the same room or not in any rooms");
+        VoxeetSDK.conference.setSpatialPosition(inConf, { x, y, z });
+      } else {
+        console.log("people are not in the same place and shouldn't be able to hear themselves");
+        VoxeetSDK.conference.setSpatialPosition(inConf, { x: Number.MAX_VALUE, y: Number.MAX_VALUE, z: Number.MAX_VALUE });
+      }
+    } else {
+      // local participant, nothing to do
+      // save the position to filter out everything in the future maybe :)
+      VoxeetSDK.conference.setSpatialPosition(inConf, {x, y, z});
+    }
   } catch(err) {
     console.log("having error in message", err);
   }
