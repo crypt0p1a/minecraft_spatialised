@@ -17,7 +17,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class RoomManager {
-    private val _rooms: ConcurrentLinkedQueue<Room>
+    private val _rooms: ConcurrentLinkedQueue<Room> = ConcurrentLinkedQueue()
     val database: Database
 
     val rooms: ConcurrentLinkedQueue<Room> get() = _rooms
@@ -31,10 +31,9 @@ class RoomManager {
             dialect = SQLiteDialect()
         )
 
-        execSqlScript("db.sql", database)
 
         try {
-            _rooms = ConcurrentLinkedQueue()
+            execSqlScript("db.sql", database)
         } catch(throwable: Throwable) {
             //nothing
         }
