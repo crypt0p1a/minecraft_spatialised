@@ -33,7 +33,12 @@ class RoomManager {
 
         execSqlScript("db.sql", database)
 
-        _rooms = ConcurrentLinkedQueue()
+        try {
+            _rooms = ConcurrentLinkedQueue()
+        } catch(throwable: Throwable) {
+            //nothing
+        }
+
         database.from(DBRoom).select().forEach {
 
             val memory = Room(
