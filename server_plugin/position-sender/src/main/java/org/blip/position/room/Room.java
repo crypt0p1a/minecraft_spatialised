@@ -6,24 +6,31 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Room {
 
-    private final UUID id;
-    private World world;
+    private final String id;
+    private String name;
+    private String world;
     private ConcurrentLinkedQueue<Coordinate> coordinates = new ConcurrentLinkedQueue<>();
     private Coordinate origin;
 
-    public Room(World world, int x, int y, int z) {
-        this.id = UUID.randomUUID();
+    Room(String name, String world, int x, int y, int z) {
+        this(UUID.randomUUID().toString(), name, world, x, y, z);
+    }
+
+    Room(String id, String name, String world, int x, int y, int z) {
+        this.id = id;
+        this.name = name;
         this.world = world;
         origin = new Coordinate(x, y, z);
     }
 
     public String id() {
-        return id.toString();
+        return id;
     }
 
     public void addBlocks(List<Block> around) {
@@ -59,5 +66,22 @@ public class Room {
                 "world=" + world +
                 ", coordinates=" + Arrays.toString(coordinates.toArray()) +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return null != id && Objects.equals(id, room.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

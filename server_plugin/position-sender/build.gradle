@@ -47,6 +47,7 @@ def urlFile = { url, name ->
 dependencies {
     compileOnly "org.spigotmc:spigot-api:${project.spigot_version}-R0.1-SNAPSHOT"
 
+    implementation files("libs/SqliteORM.jar")
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     implementation "com.squareup.retrofit2:converter-gson:2.1.0"
 }

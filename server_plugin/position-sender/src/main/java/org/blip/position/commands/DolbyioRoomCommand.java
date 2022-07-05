@@ -1,6 +1,7 @@
 package org.blip.position.commands;
 
 import org.blip.position.room.Room;
+import org.blip.position.room.RoomManager;
 import org.blip.position.room.SpreadGatherer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,11 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class DolbyioRoomCommand extends RegisterableCommandExecutor {
-    private final OnRoom onRoom;
+    private final RoomManager roomManager;
 
-    public DolbyioRoomCommand(OnRoom onRoom) {
+    public DolbyioRoomCommand(RoomManager roomManager) {
         super("dolbyio-room");
-        this.onRoom = onRoom;
+        this.roomManager = roomManager;
     }
 
     protected final boolean onCommandExecute(CommandSender sender, Command command, String label, String[] args) {
@@ -30,6 +31,7 @@ public class DolbyioRoomCommand extends RegisterableCommandExecutor {
 
         if ("create".equals(args[0]) && args.length == 2) {
             try {
+                String name = args[1];
                 Player player = (Player) sender;
                 World world = player.getWorld();
 
@@ -39,16 +41,12 @@ public class DolbyioRoomCommand extends RegisterableCommandExecutor {
                 var z = location.getBlockZ();
                 var y = location.getBlockY();
 
-                Room room = new Room(world, x, y, z);
+                Room room = roomManager.create(name, world, x, y, z);
 
-                SpreadGatherer spreadGatherer = new SpreadGatherer(world);
-                List<Block> around = spreadGatherer.around(x,y,z);
-
-                room.addBlocks(around);
+                roomManager.manageBlocks(room, world);
                 System.out.println(room);
 
-                onRoom.apply(room);
-                sender.sendMessage(ChatColor.WHITE + "room set " + room.getOrigin());
+                sender.sendMessage(ChatColor.WHITE + "room set " + room.getName() + " " + room.getOrigin());
                 return true;
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
@@ -71,9 +69,5 @@ public class DolbyioRoomCommand extends RegisterableCommandExecutor {
         }
 
         return null;
-    }
-
-    public interface OnRoom {
-        void apply(Room room);
     }
 }
