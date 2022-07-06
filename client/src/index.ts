@@ -223,9 +223,10 @@ io().on("position", (participant, x, y, z, yaw, pitch, scale, rooms) => {
     // now a specific method so that we check the impact of the rooms vs the world
     if(participant !== localParticipant.info?.externalId) {
       const localRooms = participantRooms[localParticipant.info?.externalId] || [];
-      const remoteRooms = participantRooms[localParticipant.info?.externalId] || [];
+      const remoteRooms = participantRooms[participant] || [];
 
       const intersectRooms = localRooms?.filter(room => remoteRooms.includes(room));
+      console.log({localRooms, remoteRooms})
       if (intersectRooms.length > 0 || (localRooms.length == 0 && remoteRooms.length == 0)) {
         console.log("people are in the same room or not in any rooms");
         VoxeetSDK.conference.setSpatialPosition(inConf, { x, y, z });
