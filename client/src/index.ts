@@ -232,7 +232,7 @@ io().on("position", (participant, x, y, z, yaw, pitch, scale, rooms) => {
         VoxeetSDK.conference.setSpatialPosition(inConf, { x, y, z });
       } else {
         console.log("people are not in the same place and shouldn't be able to hear themselves");
-        VoxeetSDK.conference.setSpatialPosition(inConf, { x: Number.MAX_VALUE, y: Number.MAX_VALUE, z: Number.MAX_VALUE });
+        VoxeetSDK.conference.setSpatialPosition(inConf, { x: 999999999, y: 999999999, z: 999999999 });
       }
     } else {
       // local participant, nothing to do
