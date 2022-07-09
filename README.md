@@ -72,6 +72,26 @@ Easy configuration and installation of a server centric implementation for spati
 - wait for the microphone's permission
 - that's it, you're connected (notice the microphone icon in your browser's tabs)
 
+## Full example of usage
+
+```
+# update everything
+git pull origin
+
+# rebuild the server, client and plugin
+npm run configure
+npm run build:server
+npm run build:plugin
+
+# copy the file to the minecraft server
+cp server_plugin/position-sender/build/libs/position-sender-1.0.0-all.jar ../your_server/plugins/position-sender-1.0.0-all.jar
+
+# restart the server & minecraft
+systemctl restart spatial_server.service # restart the web server + socket
+sleep 1
+systemctl restart minecraft.service # restart the minecraft server
+```
+
 ## Help
 
 Make sure that Java 17 is used to compile de plugin. You can easily control this using SDK Man
