@@ -68,9 +68,9 @@ public class ApiFetchThread {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 String uuid = player.getUniqueId().toString();
+                String name = player.getName();
                 Location eye = player.getEyeLocation();
                 float scale = getScale.get(uuid);
-                System.out.println("sending y " + eye.getX() + "/" + eye.getY() + "/" + eye.getZ());
 
                 List<Room> list = roomsForParticipant.computeIfAbsent(uuid, k -> new ArrayList<>());
 
@@ -94,7 +94,7 @@ public class ApiFetchThread {
                 // transform the rooms for the participant to string
                 List<String> inRooms = list.stream().map(Room::getName).collect(Collectors.toList());
 
-                positions.put(uuid, new Position(eye, scale, inRooms));
+                positions.put(uuid, new Position(name, eye, scale, inRooms));
             }
 
             String message = gson.toJson(new PositionUpdate(positions));
