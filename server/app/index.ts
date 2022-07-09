@@ -96,7 +96,12 @@ export default class ApiServer {
       this.server = http.createServer(this.app);
     }
     
-    this.io = new IOServer(this.server);
+    this.io = new IOServer(this.server, {
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+      }
+    });
     this.server.listen(config.server.port, config.server.host);
   
     console.log(`server is now listening on ${config.server.host}:${config.server.port}`);

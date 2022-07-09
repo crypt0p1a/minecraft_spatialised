@@ -9,7 +9,7 @@
     "moduleResolution": "node",
   },
   "files": [
-      "src/index.ts"
+      "src/index.tsx"
   ],
   "include": [ "src", "src/*", ],
   "exclude": [
