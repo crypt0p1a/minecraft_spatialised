@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import calls from './calls';
-import { Box, Card, CardActions, CardContent, CircularProgress, TextField, Typography } from '@mui/material';
+import { calls } from './utils';
+import { Alert, Box, Card, CardActions, CardContent, CircularProgress, Divider, TextField, Typography } from '@mui/material';
 
 export interface Props {
   onValidate: (minecraftId: string) => void
@@ -42,14 +42,15 @@ export default class Connect extends React.Component<Props, State> {
   render() {
     const { code, loading } = this.state;
 
-    return <Card>
+    return <Card sx={{ m: 1 }}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           Getting Started
         </Typography>
-        <Box>
+        <Box sx={{p: 2}}>
           <TextField
             required
+            sx={{ m: 2 }}
             id="filled-required"
             label="Required"
             defaultValue="Register code"
@@ -57,11 +58,16 @@ export default class Connect extends React.Component<Props, State> {
             value={code}
             onChange={event => this.setState({code: event.target.value})}
           />
+
+
+          <Alert severity="success" sx={{ m: 2}}>Connect to eden.codlab.eu</Alert>
+          <Alert severity="info" sx={{ m: 2}}>use the command /dolbyio-register</Alert>
         </Box>
+        <Divider />
       </CardContent>
       <CardActions>
         { !loading
-          ? <Button size="small" onClick={() => this.tryDefineCode()}>Init &amp; Connect</Button>
+          ? <Button size="small" onClick={() => this.tryDefineCode()}>Click to join the audio session</Button>
           : <CircularProgress /> }
       </CardActions>
     </Card>;

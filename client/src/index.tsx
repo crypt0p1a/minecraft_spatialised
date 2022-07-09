@@ -5,7 +5,7 @@ import { ThemeProvider, createTheme, } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 
 import Main from "./Main";
-import InternalSocket from './InternalSocket';
+import { InternalSocket } from './utils';
 
 const darkTheme = createTheme({
   palette: {

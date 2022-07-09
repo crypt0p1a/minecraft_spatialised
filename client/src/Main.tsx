@@ -1,10 +1,10 @@
 import * as React from 'react';
-import calls from './calls';
+import calls from './utils/calls';
 import VoxeetSDK from 'voxeet-sdk';
 import { LinearProgress } from '@mui/material';
 import Connect from './Connect';
 import { Container } from '@mui/system';
-import InConference from './InConference';
+import { InConference } from './conference';
 
 export interface Props {
 

@@ -14,7 +14,7 @@ import API from "./api";
 import fs from "fs";
 
 interface MapUUID {
-  [uuid: string]: { x: number, y:number, z: number, yaw: number, pitch: number, scale: number, rooms: string[]}
+  [uuid: string]: { name: string, x: number, y:number, z: number, yaw: number, pitch: number, scale: number, rooms: string[]}
 }
 
 interface PositionUpdate {
@@ -164,9 +164,9 @@ export default class ApiServer {
             
             if (!position) return;
 
-            const { x, y, z, yaw, pitch, scale, rooms } = position;
+            const { name, x, y, z, yaw, pitch, scale, rooms } = position;
 
-            this.io?.emit("position", uuid, x, y, z, yaw, pitch, scale, rooms);
+            this.io?.emit("position", uuid, name, x, y, z, yaw, pitch, scale, rooms);
           });
           break;
         }

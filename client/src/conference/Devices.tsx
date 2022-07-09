@@ -16,7 +16,7 @@ interface State {
 }
 
 import VoxeetSDK from 'voxeet-sdk';
-import { Card, CardContent, CardHeader, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Card, CardContent, CardHeader, Divider, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 export default class Devices extends React.Component<Props, State> {
 
@@ -70,10 +70,10 @@ export default class Devices extends React.Component<Props, State> {
 
   public render() {
     const { inputs, outputs } = this.state.audioDevices;
-    return <Card>
+    return <Card sx={{ m: 1 }}>
       <CardHeader title="audio devices"/>
       <CardContent>
-        <FormControl fullWidth>
+        <FormControl fullWidth sx={{ marginBottom: 2 }}>
           <InputLabel id="demo-simple-select-label">Input</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -85,7 +85,10 @@ export default class Devices extends React.Component<Props, State> {
             { inputs.map(input => <MenuItem value={input.deviceId}>{this.deviceName(input)}</MenuItem>)}
           </Select>
         </FormControl>
-        <FormControl fullWidth>
+
+        <Divider />
+
+        <FormControl fullWidth sx={{ marginTop: 2 }}>
           <InputLabel id="demo-simple-select-label">Ouput</InputLabel>
           <Select
             labelId="demo-simple-select-label"
