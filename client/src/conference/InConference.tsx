@@ -3,6 +3,7 @@ import Devices from "./Devices";
 import { Grid, TextField } from '@mui/material';
 import InternalSocket, { ParticipantPositionUpdate } from '../utils/InternalSocket';
 import ParticipantCell from './ParticipantCell';
+import Screenshare from './Screenshare';
 
 export interface Props {
 
@@ -38,6 +39,9 @@ export default class InConference extends React.Component<Props, State> {
       <Grid container spacing={2} wrap="wrap">
         <Grid item xs={12} sm={6} xl={4}>
           <Devices />
+        </Grid>
+        <Grid item xs={12} sm={6} xl={4}>
+          <Screenshare />
         </Grid>
 
         { this.state.participants.map(p => 
