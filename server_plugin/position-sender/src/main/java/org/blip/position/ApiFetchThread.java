@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class ApiFetchThread {
 
-    private final static int MILLISECOND_500 = 10;
+    private final static int MILLISECOND_150 = 3;
     private final RoomManager roomManager;
     private WebSocket webSocket;
     private final Gson gson;
@@ -100,7 +100,7 @@ public class ApiFetchThread {
             String message = gson.toJson(new PositionUpdate(positions));
             if (null != webSocket) webSocket.post(message);
             if (next == null) return;
-            scheduler.runTaskLater(plugin, next, MILLISECOND_500);
+            scheduler.runTaskLater(plugin, next, MILLISECOND_150);
         };
     }
 
